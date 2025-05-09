@@ -1,0 +1,27 @@
+2025/05/08 19:33:38 log.go:99: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/08 19:33:38 log.go:101: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/08 19:33:38 write.go:17: [INFO] --- Logging finalizado no arquivo ---
+2025/05/08 19:33:50 log.go:99: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/08 19:33:50 log.go:101: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/08 19:33:50 write.go:17: [INFO] --- Logging finalizado no arquivo ---
+2025/05/08 19:34:04 log.go:99: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/08 19:34:04 log.go:101: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/08 19:34:04 write.go:17: [INFO] --- Logging finalizado no arquivo ---
+2025/05/08 19:34:21 log.go:99: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/08 19:34:21 log.go:101: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/08 19:34:21 write.go:17: [INFO] --- Logging finalizado no arquivo ---
+2025/05/08 19:35:04 log.go:99: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/08 19:35:04 log.go:101: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/08 19:35:04 write.go:17: [INFO] --- Logging finalizado no arquivo ---
+2025/05/08 19:36:33 log.go:99: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/08 19:36:33 log.go:101: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/08 19:36:33 write.go:17: [INFO] --- Logging finalizado no arquivo ---
+2025/05/08 19:39:54 log.go:92: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/08 19:39:54 log.go:93: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/08 19:39:54 write.go:17: [INFO] --- Logging finalizado no arquivo ---
+2025/05/08 19:40:08 log.go:92: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/08 19:40:08 log.go:93: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/08 19:40:08 write.go:17: [INFO] --- Logging finalizado no arquivo ---
+2025/05/08 19:51:37 log.go:92: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/08 19:51:37 log.go:93: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/08 19:51:37 write.go:17: [INFO] --- Logging finalizado no arquivo ---

@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package itauchallenge;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "grpc-task-manager/proto/server_pb";
+
+message Transacao {
+    double valor = 1;                             // Valor decimal
+    google.protobuf.Timestamp dataHora = 2;       // Data/Hora ISO 8601
+  }
+  
+  // Requisição para criar uma transação (contém a transação)
+  message CriarTransacaoRequest {
+    Transacao transacao = 1;
+  }
+  
+  // Requisição para buscar estatísticas (sem parâmetros)
+  // Usaremos google.protobuf.Empty
+  
+  // Resposta das Estatísticas
+  message EstatisticaResponse {
+    int64 count = 1;    // Quantidade
+    double sum = 2;     // Soma
+    double avg = 3;     // Média
+    double min = 4;     // Mínimo
+    double max = 5;     // Máximo
+  }
+  
+  // Definição do Serviço gRPC
+  service TransacaoService {
+    // RPC para criar uma nova transação
+    // Mapeia para POST /transacao
+    rpc CriarTransacao(CriarTransacaoRequest) returns (google.protobuf.Empty);
+  
+    // RPC para limpar todas as transações
+    // Mapeia para DELETE /transacao
+    rpc LimparTransacoes(google.protobuf.Empty) returns (google.protobuf.Empty);
+  
+    // RPC para obter as estatísticas dos últimos 60 segundos
+    // Mapeia para GET /estatistica
+    rpc GetEstatistica(google.protobuf.Empty) returns (EstatisticaResponse);
+  }  
