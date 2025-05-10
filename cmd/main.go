@@ -23,7 +23,7 @@ func main() {
 
 	logger.AppLogger.Info("Iniciando serviços...")
 	meuArmazem := disk.GetInstanciaUnica()
-
+	defer logger.AppLogger.Close()
 	client := server.Client(meuArmazem)
 	server := server.Server(client)
 

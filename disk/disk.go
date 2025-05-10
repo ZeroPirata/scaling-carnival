@@ -44,7 +44,7 @@ func (a *Armazem) CalcularEstatisticasUltimoMinuto() modelos.EstatisticasTransac
 	logger.AppLogger.Info("Calculando estatísticas. Agora: %s, Limite de tempo: %s\n", agora.Format(time.RFC3339), limiteInferiorTempo.Format(time.RFC3339))
 
 	for _, t := range a.transacoes {
-		if t.Uptime.After(limiteInferiorTempo) {
+		if t.DataTransicao.After(limiteInferiorTempo) {
 			logger.AppLogger.Info("Transação incluída no cálculo: Valor=%.2f, DataHora=%s\n", t.Valor, t.DataTransicao.Format(time.RFC3339))
 			if primeiraTransacaoNoPeriodo {
 				minVal = t.Valor
@@ -75,4 +75,10 @@ func (a *Armazem) CalcularEstatisticasUltimoMinuto() modelos.EstatisticasTransac
 		Min:   minVal,
 		Max:   maxVal,
 	}
+}
+
+func (a *Armazem) LimparTransacoes() {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	a.transacoes = a.transacoes[:0]
 }

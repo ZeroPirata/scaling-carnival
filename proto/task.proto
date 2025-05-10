@@ -2,14 +2,13 @@ syntax = "proto3";
 
 package itauchallenge;
 
-import "google/protobuf/timestamp.proto";
 import "google/protobuf/empty.proto";
 
 option go_package = "grpc-task-manager/proto/server_pb";
 
 message Transacao {
     double valor = 1;                             // Valor decimal
-    google.protobuf.Timestamp dataHora = 2;       // Data/Hora ISO 8601
+    string dataHora = 2;       // Data/Hora ISO 8601
   }
   
   // Requisição para criar uma transação (contém a transação)

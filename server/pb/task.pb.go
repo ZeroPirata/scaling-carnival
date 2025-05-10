@@ -10,7 +10,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	_ "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -26,7 +26,7 @@ const (
 type Transacao struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Valor         float64                `protobuf:"fixed64,1,opt,name=valor,proto3" json:"valor,omitempty"`     // Valor decimal
-	DataHora      *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=dataHora,proto3" json:"dataHora,omitempty"` // Data/Hora ISO 8601
+	DataHora      string                 `protobuf:"bytes,2,opt,name=dataHora,proto3" json:"dataHora,omitempty"` // Data/Hora ISO 8601
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -68,11 +68,11 @@ func (x *Transacao) GetValor() float64 {
 	return 0
 }
 
-func (x *Transacao) GetDataHora() *timestamppb.Timestamp {
+func (x *Transacao) GetDataHora() string {
 	if x != nil {
 		return x.DataHora
 	}
-	return nil
+	return ""
 }
 
 // Requisição para criar uma transação (contém a transação)
@@ -202,10 +202,10 @@ var File_task_proto protoreflect.FileDescriptor
 const file_task_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"task.proto\x12\ritauchallenge\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"Y\n" +
+	"task.proto\x12\ritauchallenge\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"=\n" +
 	"\tTransacao\x12\x14\n" +
-	"\x05valor\x18\x01 \x01(\x01R\x05valor\x126\n" +
-	"\bdataHora\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\bdataHora\"O\n" +
+	"\x05valor\x18\x01 \x01(\x01R\x05valor\x12\x1a\n" +
+	"\bdataHora\x18\x02 \x01(\tR\bdataHora\"O\n" +
 	"\x15CriarTransacaoRequest\x126\n" +
 	"\ttransacao\x18\x01 \x01(\v2\x18.itauchallenge.TransacaoR\ttransacao\"s\n" +
 	"\x13EstatisticaResponse\x12\x14\n" +
@@ -236,23 +236,21 @@ var file_task_proto_goTypes = []any{
 	(*Transacao)(nil),             // 0: itauchallenge.Transacao
 	(*CriarTransacaoRequest)(nil), // 1: itauchallenge.CriarTransacaoRequest
 	(*EstatisticaResponse)(nil),   // 2: itauchallenge.EstatisticaResponse
-	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),         // 4: google.protobuf.Empty
+	(*emptypb.Empty)(nil),         // 3: google.protobuf.Empty
 }
 var file_task_proto_depIdxs = []int32{
-	3, // 0: itauchallenge.Transacao.dataHora:type_name -> google.protobuf.Timestamp
-	0, // 1: itauchallenge.CriarTransacaoRequest.transacao:type_name -> itauchallenge.Transacao
-	1, // 2: itauchallenge.TransacaoService.CriarTransacao:input_type -> itauchallenge.CriarTransacaoRequest
-	4, // 3: itauchallenge.TransacaoService.LimparTransacoes:input_type -> google.protobuf.Empty
-	4, // 4: itauchallenge.TransacaoService.GetEstatistica:input_type -> google.protobuf.Empty
-	4, // 5: itauchallenge.TransacaoService.CriarTransacao:output_type -> google.protobuf.Empty
-	4, // 6: itauchallenge.TransacaoService.LimparTransacoes:output_type -> google.protobuf.Empty
-	2, // 7: itauchallenge.TransacaoService.GetEstatistica:output_type -> itauchallenge.EstatisticaResponse
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // 0: itauchallenge.CriarTransacaoRequest.transacao:type_name -> itauchallenge.Transacao
+	1, // 1: itauchallenge.TransacaoService.CriarTransacao:input_type -> itauchallenge.CriarTransacaoRequest
+	3, // 2: itauchallenge.TransacaoService.LimparTransacoes:input_type -> google.protobuf.Empty
+	3, // 3: itauchallenge.TransacaoService.GetEstatistica:input_type -> google.protobuf.Empty
+	3, // 4: itauchallenge.TransacaoService.CriarTransacao:output_type -> google.protobuf.Empty
+	3, // 5: itauchallenge.TransacaoService.LimparTransacoes:output_type -> google.protobuf.Empty
+	2, // 6: itauchallenge.TransacaoService.GetEstatistica:output_type -> itauchallenge.EstatisticaResponse
+	4, // [4:7] is the sub-list for method output_type
+	1, // [1:4] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_task_proto_init() }

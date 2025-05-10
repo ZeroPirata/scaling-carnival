@@ -37,3 +37,11 @@ func (s *GrpcServer) GetEstatistica(ctx context.Context, params *emptypb.Empty) 
 	}
 	return res, err
 }
+
+func (s *GrpcServer) LimparTransacoes(ctx context.Context, params *emptypb.Empty) (res *emptypb.Empty, err error) {
+	res, err = s.client.LimparTransacoes(ctx, params)
+	if err != nil {
+		return nil, err
+	}
+	return res, err
+}

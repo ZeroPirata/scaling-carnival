@@ -7,6 +7,7 @@ import (
 	"desafio-itau-back-grpc/modelos"
 	server_pb "desafio-itau-back-grpc/server/pb"
 	"fmt"
+	"strings"
 	"time"
 
 	"google.golang.org/grpc/codes"
@@ -24,48 +25,60 @@ func Client(disk *disk.Armazem) *ClientService {
 	}
 }
 
-func (s *ClientService) CriarTransacao(ctx context.Context, params *server_pb.CriarTransacaoRequest) (res *emptypb.Empty, err error) {
-	valorTransacao := params.GetTransacao().GetValor()
-	dataTransacao := params.GetTransacao().GetDataHora()
+func (s *ClientService) CriarTransacao(ctx context.Context, params *server_pb.CriarTransacaoRequest) (*emptypb.Empty, error) {
+	transacaoPayload := params.GetTransacao()
+	if transacaoPayload == nil {
+		logger.AppLogger.Warn("Requisição de transação recebida sem payload de transação.")
+		return nil, status.Errorf(codes.InvalidArgument, "payload da transação não fornecido")
+	}
+	valorTransacao := transacaoPayload.GetValor()
+	dataHoraString := transacaoPayload.GetDataHora()
+
 	if valorTransacao <= 0 {
 		msgErro := fmt.Sprintf("valor da transação deve ser positivo, recebido: %.2f", valorTransacao)
 		logger.AppLogger.Warn(msgErro)
-		return nil, status.Errorf(codes.InvalidArgument, "transação invalida.")
+		return nil, status.Errorf(codes.InvalidArgument, "valor da transação deve ser positivo")
 	}
-	if dataTransacao == nil {
-		msgErro := fmt.Sprintf("valor da data deve ser preenchida: %s", dataTransacao)
+
+	if strings.TrimSpace(dataHoraString) == "" {
+		logger.AppLogger.Warn("dataHora da transação (string) não foi fornecida ou está vazia.")
+		return nil, status.Errorf(codes.InvalidArgument, "dataHora da transação deve ser fornecida")
+	}
+
+	dataHoraTransacao, err := time.Parse(time.RFC3339Nano, dataHoraString)
+	if err != nil {
+		msgErro := fmt.Sprintf("dataHora da transação ('%s') não está no formato ISO 8601 (RFC3339Nano) esperado. Erro de parse: %v", dataHoraString, err)
 		logger.AppLogger.Warn(msgErro)
-		return nil, status.Errorf(codes.InvalidArgument, "Data deve ser preenchidas")
+		return nil, status.Errorf(codes.InvalidArgument, "dataHora da transação com formato inválido. Esperado formato ISO 8601 (ex: 2023-10-27T10:30:00.123456789Z ou com offset).")
 	}
-	if !dataTransacao.IsValid() {
-		msgErro := fmt.Sprintf("valor da data deve ser preenchida de forma correto: %s", dataTransacao)
+
+	dataHoraTransacao = dataHoraTransacao.UTC()
+	if dataHoraTransacao.IsZero() {
+		logger.AppLogger.Warn("dataHora da transação, apesar de parseável, resultou em uma data/hora zerada (0001-01-01T00:00:00Z).")
+		return nil, status.Errorf(codes.InvalidArgument, "dataHora da transação deve ser um valor válido e não zerado")
+	}
+
+	agoraUTC := time.Now().UTC()
+	if dataHoraTransacao.After(agoraUTC) {
+		msgErro := fmt.Sprintf("dataHora da transação (%s) não pode ser no futuro (horário atual do servidor UTC: %s)",
+			dataHoraTransacao.Format(time.RFC3339Nano),
+			agoraUTC.Format(time.RFC3339Nano))
 		logger.AppLogger.Warn(msgErro)
-		return nil, status.Errorf(codes.InvalidArgument, "Data deve ser preenchidas com valores validos")
+		return nil, status.Errorf(codes.InvalidArgument, "dataHora da transação não pode ser uma data futura")
 	}
-	transacao := dataTransacao.AsTime()
-	if transacao.IsZero() {
-		msgErro := fmt.Sprintf("valor da data deve ser preenchida de forma correto: %s", dataTransacao)
-		logger.AppLogger.Warn(msgErro)
-		return nil, status.Errorf(codes.InvalidArgument, "Data deve ser preenchidas com valores validos")
-	}
-	agora := time.Now()
-	if transacao.After(agora) {
-		msgErro := fmt.Sprintf("dataHora da transação (%s) não pode ser no futuro (horário atual do servidor: %s)",
-			transacao.Format(time.RFC3339),
-			agora.Format(time.RFC3339))
-		logger.AppLogger.Warn(msgErro)
-		return nil, status.Errorf(codes.InvalidArgument, "Data deve ser preenchidas com valores validos")
-	}
+
 	s.Armazem.AdicionarTransacao(modelos.Transacoes{
 		Valor:         valorTransacao,
-		DataTransicao: transacao,
-		Uptime:        time.Now(),
+		DataTransicao: dataHoraTransacao,
+		Uptime:        time.Now().UTC(),
 	})
-	msg := fmt.Sprintf("data hora da transação (%s) | valor (%.2f) ",
-		transacao.Format(time.RFC3339),
+
+	msgSucesso := fmt.Sprintf("Transação criada com sucesso: dataHora (%s), valor (%.2f)",
+		dataHoraTransacao.Format(time.RFC3339Nano),
 		valorTransacao)
-	logger.AppLogger.Info(msg)
-	return res, err
+	logger.AppLogger.Info(msgSucesso)
+
+	return &emptypb.Empty{}, nil
 }
 
 func (s *ClientService) GetEstatistica(ctx context.Context, params *emptypb.Empty) (res *server_pb.EstatisticaResponse, err error) {
@@ -77,5 +90,10 @@ func (s *ClientService) GetEstatistica(ctx context.Context, params *emptypb.Empt
 		Min:   estatisticas.Min,
 		Max:   estatisticas.Max,
 	}
+	return res, nil
+}
+
+func (s *ClientService) LimparTransacoes(ctx context.Context, params *emptypb.Empty) (res *emptypb.Empty, err error) {
+	s.Armazem.LimparTransacoes()
 	return res, nil
 }
