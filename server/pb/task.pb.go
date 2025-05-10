@@ -10,7 +10,6 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	_ "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -25,8 +24,8 @@ const (
 
 type Transacao struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Valor         float64                `protobuf:"fixed64,1,opt,name=valor,proto3" json:"valor,omitempty"`     // Valor decimal
-	DataHora      string                 `protobuf:"bytes,2,opt,name=dataHora,proto3" json:"dataHora,omitempty"` // Data/Hora ISO 8601
+	Valor         float64                `protobuf:"fixed64,1,opt,name=valor,proto3" json:"valor,omitempty"`
+	DataHora      string                 `protobuf:"bytes,2,opt,name=dataHora,proto3" json:"dataHora,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -75,7 +74,6 @@ func (x *Transacao) GetDataHora() string {
 	return ""
 }
 
-// Requisição para criar uma transação (contém a transação)
 type CriarTransacaoRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Transacao     *Transacao             `protobuf:"bytes,1,opt,name=transacao,proto3" json:"transacao,omitempty"`
@@ -120,32 +118,27 @@ func (x *CriarTransacaoRequest) GetTransacao() *Transacao {
 	return nil
 }
 
-// Resposta das Estatísticas
-type EstatisticaResponse struct {
+type GetHealthCheckResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Count         int64                  `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"` // Quantidade
-	Sum           float64                `protobuf:"fixed64,2,opt,name=sum,proto3" json:"sum,omitempty"`    // Soma
-	Avg           float64                `protobuf:"fixed64,3,opt,name=avg,proto3" json:"avg,omitempty"`    // Média
-	Min           float64                `protobuf:"fixed64,4,opt,name=min,proto3" json:"min,omitempty"`    // Mínimo
-	Max           float64                `protobuf:"fixed64,5,opt,name=max,proto3" json:"max,omitempty"`    // Máximo
+	Status        string                 `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *EstatisticaResponse) Reset() {
-	*x = EstatisticaResponse{}
+func (x *GetHealthCheckResponse) Reset() {
+	*x = GetHealthCheckResponse{}
 	mi := &file_task_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *EstatisticaResponse) String() string {
+func (x *GetHealthCheckResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*EstatisticaResponse) ProtoMessage() {}
+func (*GetHealthCheckResponse) ProtoMessage() {}
 
-func (x *EstatisticaResponse) ProtoReflect() protoreflect.Message {
+func (x *GetHealthCheckResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_task_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -157,40 +150,132 @@ func (x *EstatisticaResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use EstatisticaResponse.ProtoReflect.Descriptor instead.
-func (*EstatisticaResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetHealthCheckResponse.ProtoReflect.Descriptor instead.
+func (*GetHealthCheckResponse) Descriptor() ([]byte, []int) {
 	return file_task_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *EstatisticaResponse) GetCount() int64 {
+func (x *GetHealthCheckResponse) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+type GetEstatisticaRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TimeTravel    int64                  `protobuf:"varint,1,opt,name=time_travel,json=timeTravel,proto3" json:"time_travel,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEstatisticaRequest) Reset() {
+	*x = GetEstatisticaRequest{}
+	mi := &file_task_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEstatisticaRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEstatisticaRequest) ProtoMessage() {}
+
+func (x *GetEstatisticaRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_task_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEstatisticaRequest.ProtoReflect.Descriptor instead.
+func (*GetEstatisticaRequest) Descriptor() ([]byte, []int) {
+	return file_task_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetEstatisticaRequest) GetTimeTravel() int64 {
+	if x != nil {
+		return x.TimeTravel
+	}
+	return 0
+}
+
+type GetEstatisticaResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Count         int64                  `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
+	Sum           float64                `protobuf:"fixed64,2,opt,name=sum,proto3" json:"sum,omitempty"`
+	Avg           float64                `protobuf:"fixed64,3,opt,name=avg,proto3" json:"avg,omitempty"`
+	Min           float64                `protobuf:"fixed64,4,opt,name=min,proto3" json:"min,omitempty"`
+	Max           float64                `protobuf:"fixed64,5,opt,name=max,proto3" json:"max,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetEstatisticaResponse) Reset() {
+	*x = GetEstatisticaResponse{}
+	mi := &file_task_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetEstatisticaResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetEstatisticaResponse) ProtoMessage() {}
+
+func (x *GetEstatisticaResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_task_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetEstatisticaResponse.ProtoReflect.Descriptor instead.
+func (*GetEstatisticaResponse) Descriptor() ([]byte, []int) {
+	return file_task_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetEstatisticaResponse) GetCount() int64 {
 	if x != nil {
 		return x.Count
 	}
 	return 0
 }
 
-func (x *EstatisticaResponse) GetSum() float64 {
+func (x *GetEstatisticaResponse) GetSum() float64 {
 	if x != nil {
 		return x.Sum
 	}
 	return 0
 }
 
-func (x *EstatisticaResponse) GetAvg() float64 {
+func (x *GetEstatisticaResponse) GetAvg() float64 {
 	if x != nil {
 		return x.Avg
 	}
 	return 0
 }
 
-func (x *EstatisticaResponse) GetMin() float64 {
+func (x *GetEstatisticaResponse) GetMin() float64 {
 	if x != nil {
 		return x.Min
 	}
 	return 0
 }
 
-func (x *EstatisticaResponse) GetMax() float64 {
+func (x *GetEstatisticaResponse) GetMax() float64 {
 	if x != nil {
 		return x.Max
 	}
@@ -202,22 +287,28 @@ var File_task_proto protoreflect.FileDescriptor
 const file_task_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"task.proto\x12\ritauchallenge\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"=\n" +
+	"task.proto\x12\ritauchallenge\x1a\x1bgoogle/protobuf/empty.proto\"=\n" +
 	"\tTransacao\x12\x14\n" +
 	"\x05valor\x18\x01 \x01(\x01R\x05valor\x12\x1a\n" +
 	"\bdataHora\x18\x02 \x01(\tR\bdataHora\"O\n" +
 	"\x15CriarTransacaoRequest\x126\n" +
-	"\ttransacao\x18\x01 \x01(\v2\x18.itauchallenge.TransacaoR\ttransacao\"s\n" +
-	"\x13EstatisticaResponse\x12\x14\n" +
+	"\ttransacao\x18\x01 \x01(\v2\x18.itauchallenge.TransacaoR\ttransacao\"0\n" +
+	"\x16GetHealthCheckResponse\x12\x16\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status\"8\n" +
+	"\x15GetEstatisticaRequest\x12\x1f\n" +
+	"\vtime_travel\x18\x01 \x01(\x03R\n" +
+	"timeTravel\"v\n" +
+	"\x16GetEstatisticaResponse\x12\x14\n" +
 	"\x05count\x18\x01 \x01(\x03R\x05count\x12\x10\n" +
 	"\x03sum\x18\x02 \x01(\x01R\x03sum\x12\x10\n" +
 	"\x03avg\x18\x03 \x01(\x01R\x03avg\x12\x10\n" +
 	"\x03min\x18\x04 \x01(\x01R\x03min\x12\x10\n" +
-	"\x03max\x18\x05 \x01(\x01R\x03max2\xf4\x01\n" +
+	"\x03max\x18\x05 \x01(\x01R\x03max2\xd8\x02\n" +
 	"\x10TransacaoService\x12N\n" +
 	"\x0eCriarTransacao\x12$.itauchallenge.CriarTransacaoRequest\x1a\x16.google.protobuf.Empty\x12B\n" +
-	"\x10LimparTransacoes\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\x12L\n" +
-	"\x0eGetEstatistica\x12\x16.google.protobuf.Empty\x1a\".itauchallenge.EstatisticaResponseB#Z!grpc-task-manager/proto/server_pbb\x06proto3"
+	"\x10LimparTransacoes\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.Empty\x12]\n" +
+	"\x0eGetEstatistica\x12$.itauchallenge.GetEstatisticaRequest\x1a%.itauchallenge.GetEstatisticaResponse\x12Q\n" +
+	"\x0eGetHealthCheck\x12\x16.google.protobuf.Empty\x1a%.itauchallenge.GetHealthCheckResponse0\x01B#Z!grpc-task-manager/proto/server_pbb\x06proto3"
 
 var (
 	file_task_proto_rawDescOnce sync.Once
@@ -231,23 +322,27 @@ func file_task_proto_rawDescGZIP() []byte {
 	return file_task_proto_rawDescData
 }
 
-var file_task_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_task_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_task_proto_goTypes = []any{
-	(*Transacao)(nil),             // 0: itauchallenge.Transacao
-	(*CriarTransacaoRequest)(nil), // 1: itauchallenge.CriarTransacaoRequest
-	(*EstatisticaResponse)(nil),   // 2: itauchallenge.EstatisticaResponse
-	(*emptypb.Empty)(nil),         // 3: google.protobuf.Empty
+	(*Transacao)(nil),              // 0: itauchallenge.Transacao
+	(*CriarTransacaoRequest)(nil),  // 1: itauchallenge.CriarTransacaoRequest
+	(*GetHealthCheckResponse)(nil), // 2: itauchallenge.GetHealthCheckResponse
+	(*GetEstatisticaRequest)(nil),  // 3: itauchallenge.GetEstatisticaRequest
+	(*GetEstatisticaResponse)(nil), // 4: itauchallenge.GetEstatisticaResponse
+	(*emptypb.Empty)(nil),          // 5: google.protobuf.Empty
 }
 var file_task_proto_depIdxs = []int32{
 	0, // 0: itauchallenge.CriarTransacaoRequest.transacao:type_name -> itauchallenge.Transacao
 	1, // 1: itauchallenge.TransacaoService.CriarTransacao:input_type -> itauchallenge.CriarTransacaoRequest
-	3, // 2: itauchallenge.TransacaoService.LimparTransacoes:input_type -> google.protobuf.Empty
-	3, // 3: itauchallenge.TransacaoService.GetEstatistica:input_type -> google.protobuf.Empty
-	3, // 4: itauchallenge.TransacaoService.CriarTransacao:output_type -> google.protobuf.Empty
-	3, // 5: itauchallenge.TransacaoService.LimparTransacoes:output_type -> google.protobuf.Empty
-	2, // 6: itauchallenge.TransacaoService.GetEstatistica:output_type -> itauchallenge.EstatisticaResponse
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
+	5, // 2: itauchallenge.TransacaoService.LimparTransacoes:input_type -> google.protobuf.Empty
+	3, // 3: itauchallenge.TransacaoService.GetEstatistica:input_type -> itauchallenge.GetEstatisticaRequest
+	5, // 4: itauchallenge.TransacaoService.GetHealthCheck:input_type -> google.protobuf.Empty
+	5, // 5: itauchallenge.TransacaoService.CriarTransacao:output_type -> google.protobuf.Empty
+	5, // 6: itauchallenge.TransacaoService.LimparTransacoes:output_type -> google.protobuf.Empty
+	4, // 7: itauchallenge.TransacaoService.GetEstatistica:output_type -> itauchallenge.GetEstatisticaResponse
+	2, // 8: itauchallenge.TransacaoService.GetHealthCheck:output_type -> itauchallenge.GetHealthCheckResponse
+	5, // [5:9] is the sub-list for method output_type
+	1, // [1:5] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -264,7 +359,7 @@ func file_task_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_task_proto_rawDesc), len(file_task_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

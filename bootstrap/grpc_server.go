@@ -3,14 +3,12 @@ package bootstrap
 import (
 	"desafio-itau-back-grpc/logger"
 	"net"
-	"os"
 )
 
-func InitGRPCListener() (net.Listener, string, error) {
-	addr := os.Getenv("GRPC_ADDR_POSTGRES")
+func InitGRPCListener(addr string) (net.Listener, string, error) {
 	if addr == "" {
 		addr = ":4044"
-		logger.AppLogger.Info("Variável GRPC_ADDR_POSTGRES não definida. Usando porta padrão: %s", addr)
+		logger.AppLogger.Info("Variável váriavel de ambiente não definida não definida. Usando porta padrão: %s", addr)
 	}
 
 	listener, err := net.Listen("tcp", addr)

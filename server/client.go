@@ -81,9 +81,9 @@ func (s *ClientService) CriarTransacao(ctx context.Context, params *server_pb.Cr
 	return &emptypb.Empty{}, nil
 }
 
-func (s *ClientService) GetEstatistica(ctx context.Context, params *emptypb.Empty) (res *server_pb.EstatisticaResponse, err error) {
-	estatisticas := s.Armazem.CalcularEstatisticasUltimoMinuto()
-	res = &server_pb.EstatisticaResponse{
+func (s *ClientService) GetEstatistica(ctx context.Context, params *server_pb.GetEstatisticaRequest) (res *server_pb.GetEstatisticaResponse, err error) {
+	estatisticas := s.Armazem.CalcularEstatisticasUltimoMinuto(params.TimeTravel)
+	res = &server_pb.GetEstatisticaResponse{
 		Count: int64(estatisticas.Count),
 		Sum:   estatisticas.Sum,
 		Avg:   estatisticas.Avg,
@@ -96,4 +96,25 @@ func (s *ClientService) GetEstatistica(ctx context.Context, params *emptypb.Empt
 func (s *ClientService) LimparTransacoes(ctx context.Context, params *emptypb.Empty) (res *emptypb.Empty, err error) {
 	s.Armazem.LimparTransacoes()
 	return res, nil
+}
+
+func (s *ClientService) GetHealthCheck(req *emptypb.Empty, stream server_pb.TransacaoService_GetHealthCheckServer) error {
+	for i := range 5 {
+		if stream.Context().Err() != nil {
+			logger.AppLogger.Warn("Stream cancelado pelo cliente.")
+			return stream.Context().Err()
+		}
+
+		response := &server_pb.GetHealthCheckResponse{
+			Status: fmt.Sprintf("SERVING - Contagem %d", i+1),
+		}
+		if err := stream.Send(response); err != nil {
+			logger.AppLogger.Error("Erro ao enviar stream: %v\n", err)
+			return status.Errorf(codes.Internal, "erro ao enviar stream: %v", err)
+		}
+		logger.AppLogger.Info("Status enviado: %s\n", response.Status)
+		time.Sleep(1 * time.Second)
+	}
+
+	return nil
 }

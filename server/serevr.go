@@ -30,7 +30,7 @@ func (s *GrpcServer) CriarTransacao(ctx context.Context, params *server_pb.Criar
 	return res, err
 }
 
-func (s *GrpcServer) GetEstatistica(ctx context.Context, params *emptypb.Empty) (res *server_pb.EstatisticaResponse, err error) {
+func (s *GrpcServer) GetEstatistica(ctx context.Context, params *server_pb.GetEstatisticaRequest) (res *server_pb.GetEstatisticaResponse, err error) {
 	res, err = s.client.GetEstatistica(ctx, params)
 	if err != nil {
 		return nil, err
@@ -44,4 +44,12 @@ func (s *GrpcServer) LimparTransacoes(ctx context.Context, params *emptypb.Empty
 		return nil, err
 	}
 	return res, err
+}
+
+func (s *GrpcServer) GetHealthCheck(req *emptypb.Empty, stream server_pb.TransacaoService_GetHealthCheckServer) (err error) {
+	err = s.client.GetHealthCheck(req, stream)
+	if err != nil {
+		return err
+	}
+	return nil
 }

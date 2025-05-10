@@ -23,13 +23,12 @@ const (
 	TransacaoService_CriarTransacao_FullMethodName   = "/itauchallenge.TransacaoService/CriarTransacao"
 	TransacaoService_LimparTransacoes_FullMethodName = "/itauchallenge.TransacaoService/LimparTransacoes"
 	TransacaoService_GetEstatistica_FullMethodName   = "/itauchallenge.TransacaoService/GetEstatistica"
+	TransacaoService_GetHealthCheck_FullMethodName   = "/itauchallenge.TransacaoService/GetHealthCheck"
 )
 
 // TransacaoServiceClient is the client API for TransacaoService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-//
-// Definição do Serviço gRPC
 type TransacaoServiceClient interface {
 	// RPC para criar uma nova transação
 	// Mapeia para POST /transacao
@@ -39,7 +38,10 @@ type TransacaoServiceClient interface {
 	LimparTransacoes(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// RPC para obter as estatísticas dos últimos 60 segundos
 	// Mapeia para GET /estatistica
-	GetEstatistica(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*EstatisticaResponse, error)
+	GetEstatistica(ctx context.Context, in *GetEstatisticaRequest, opts ...grpc.CallOption) (*GetEstatisticaResponse, error)
+	// RPC para obter o status do servidor
+	// Mepaia para GET /healthcheck
+	GetHealthCheck(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetHealthCheckResponse], error)
 }
 
 type transacaoServiceClient struct {
@@ -70,9 +72,9 @@ func (c *transacaoServiceClient) LimparTransacoes(ctx context.Context, in *empty
 	return out, nil
 }
 
-func (c *transacaoServiceClient) GetEstatistica(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*EstatisticaResponse, error) {
+func (c *transacaoServiceClient) GetEstatistica(ctx context.Context, in *GetEstatisticaRequest, opts ...grpc.CallOption) (*GetEstatisticaResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(EstatisticaResponse)
+	out := new(GetEstatisticaResponse)
 	err := c.cc.Invoke(ctx, TransacaoService_GetEstatistica_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -80,11 +82,28 @@ func (c *transacaoServiceClient) GetEstatistica(ctx context.Context, in *emptypb
 	return out, nil
 }
 
+func (c *transacaoServiceClient) GetHealthCheck(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetHealthCheckResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &TransacaoService_ServiceDesc.Streams[0], TransacaoService_GetHealthCheck_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[emptypb.Empty, GetHealthCheckResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type TransacaoService_GetHealthCheckClient = grpc.ServerStreamingClient[GetHealthCheckResponse]
+
 // TransacaoServiceServer is the server API for TransacaoService service.
 // All implementations must embed UnimplementedTransacaoServiceServer
 // for forward compatibility.
-//
-// Definição do Serviço gRPC
 type TransacaoServiceServer interface {
 	// RPC para criar uma nova transação
 	// Mapeia para POST /transacao
@@ -94,7 +113,10 @@ type TransacaoServiceServer interface {
 	LimparTransacoes(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// RPC para obter as estatísticas dos últimos 60 segundos
 	// Mapeia para GET /estatistica
-	GetEstatistica(context.Context, *emptypb.Empty) (*EstatisticaResponse, error)
+	GetEstatistica(context.Context, *GetEstatisticaRequest) (*GetEstatisticaResponse, error)
+	// RPC para obter o status do servidor
+	// Mepaia para GET /healthcheck
+	GetHealthCheck(*emptypb.Empty, grpc.ServerStreamingServer[GetHealthCheckResponse]) error
 	mustEmbedUnimplementedTransacaoServiceServer()
 }
 
@@ -111,8 +133,11 @@ func (UnimplementedTransacaoServiceServer) CriarTransacao(context.Context, *Cria
 func (UnimplementedTransacaoServiceServer) LimparTransacoes(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LimparTransacoes not implemented")
 }
-func (UnimplementedTransacaoServiceServer) GetEstatistica(context.Context, *emptypb.Empty) (*EstatisticaResponse, error) {
+func (UnimplementedTransacaoServiceServer) GetEstatistica(context.Context, *GetEstatisticaRequest) (*GetEstatisticaResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEstatistica not implemented")
+}
+func (UnimplementedTransacaoServiceServer) GetHealthCheck(*emptypb.Empty, grpc.ServerStreamingServer[GetHealthCheckResponse]) error {
+	return status.Errorf(codes.Unimplemented, "method GetHealthCheck not implemented")
 }
 func (UnimplementedTransacaoServiceServer) mustEmbedUnimplementedTransacaoServiceServer() {}
 func (UnimplementedTransacaoServiceServer) testEmbeddedByValue()                          {}
@@ -172,7 +197,7 @@ func _TransacaoService_LimparTransacoes_Handler(srv interface{}, ctx context.Con
 }
 
 func _TransacaoService_GetEstatistica_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(GetEstatisticaRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -184,10 +209,21 @@ func _TransacaoService_GetEstatistica_Handler(srv interface{}, ctx context.Conte
 		FullMethod: TransacaoService_GetEstatistica_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TransacaoServiceServer).GetEstatistica(ctx, req.(*emptypb.Empty))
+		return srv.(TransacaoServiceServer).GetEstatistica(ctx, req.(*GetEstatisticaRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
+
+func _TransacaoService_GetHealthCheck_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(emptypb.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(TransacaoServiceServer).GetHealthCheck(m, &grpc.GenericServerStream[emptypb.Empty, GetHealthCheckResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type TransacaoService_GetHealthCheckServer = grpc.ServerStreamingServer[GetHealthCheckResponse]
 
 // TransacaoService_ServiceDesc is the grpc.ServiceDesc for TransacaoService service.
 // It's only intended for direct use with grpc.RegisterService,
@@ -209,6 +245,12 @@ var TransacaoService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _TransacaoService_GetEstatistica_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetHealthCheck",
+			Handler:       _TransacaoService_GetHealthCheck_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "task.proto",
 }

@@ -7,38 +7,45 @@ import "google/protobuf/empty.proto";
 option go_package = "grpc-task-manager/proto/server_pb";
 
 message Transacao {
-    double valor = 1;                             // Valor decimal
-    string dataHora = 2;       // Data/Hora ISO 8601
+    double valor = 1; 
+    string dataHora = 2;
   }
   
-  // Requisição para criar uma transação (contém a transação)
-  message CriarTransacaoRequest {
-    Transacao transacao = 1;
-  }
+message CriarTransacaoRequest {
+  Transacao transacao = 1;
+}
+
+message GetHealthCheckResponse {
+  string status = 1;
+}
+
+message GetEstatisticaRequest {
+  int64 time_travel = 1;
+}
+
+message GetEstatisticaResponse {
+  int64 count = 1;
+  double sum = 2;
+  double avg = 3;
+  double min = 4;
+  double max = 5;
+}
   
-  // Requisição para buscar estatísticas (sem parâmetros)
-  // Usaremos google.protobuf.Empty
+service TransacaoService {
+  // RPC para criar uma nova transação
+  // Mapeia para POST /transacao
+  rpc CriarTransacao(CriarTransacaoRequest) returns (google.protobuf.Empty);
   
-  // Resposta das Estatísticas
-  message EstatisticaResponse {
-    int64 count = 1;    // Quantidade
-    double sum = 2;     // Soma
-    double avg = 3;     // Média
-    double min = 4;     // Mínimo
-    double max = 5;     // Máximo
-  }
+  // RPC para limpar todas as transações
+  // Mapeia para DELETE /transacao
+  rpc LimparTransacoes(google.protobuf.Empty) returns (google.protobuf.Empty);
   
-  // Definição do Serviço gRPC
-  service TransacaoService {
-    // RPC para criar uma nova transação
-    // Mapeia para POST /transacao
-    rpc CriarTransacao(CriarTransacaoRequest) returns (google.protobuf.Empty);
-  
-    // RPC para limpar todas as transações
-    // Mapeia para DELETE /transacao
-    rpc LimparTransacoes(google.protobuf.Empty) returns (google.protobuf.Empty);
-  
-    // RPC para obter as estatísticas dos últimos 60 segundos
-    // Mapeia para GET /estatistica
-    rpc GetEstatistica(google.protobuf.Empty) returns (EstatisticaResponse);
-  }  
+  // RPC para obter as estatísticas dos últimos 60 segundos
+  // Mapeia para GET /estatistica
+  rpc GetEstatistica(GetEstatisticaRequest) returns (GetEstatisticaResponse);
+    
+  // RPC para obter o status do servidor
+  // Mepaia para GET /healthcheck
+  rpc GetHealthCheck(google.protobuf.Empty) returns (stream GetHealthCheckResponse);
+}  
+

@@ -1,0 +1,32 @@
+2025/05/10 17:15:37 log.go:92: --- Logging padrão (pacote 'log') iniciado no arquivo ---
+2025/05/10 17:15:37 log.go:93: [INFO] --- AppLogger iniciado no arquivo ---
+2025/05/10 17:15:37 level.go:20: [INFO] Iniciando serviços...
+2025/05/10 17:15:37 level.go:20: [INFO] Armazenamento interno iniciado.
+2025/05/10 17:15:37 metricas.go:15: Servidor de métricas ouvindo em :9091
+2025/05/10 17:15:37 level.go:20: [INFO] Servidor gRPC escutando em :50051
+2025/05/10 17:15:37 level.go:20: [INFO] Iniciando gRPC em :50051
+2025/05/10 17:16:14 level.go:20: [INFO] Transação criada com sucesso: dataHora (2020-08-07T15:34:56.789Z), valor (123.45)
+2025/05/10 17:16:14 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=CriarTransacao, Duracao=536.2µs, Status=OK Em=2025-05-10 17:16:14.6184347 -0300 -03 m=+36.976638901
+2025/05/10 17:23:44 level.go:20: [INFO] Transação criada com sucesso: dataHora (2020-08-07T15:34:56.789Z), valor (123.45)
+2025/05/10 17:23:44 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=CriarTransacao, Duracao=3.7127ms, Status=OK Em=2025-05-10 17:23:44.5691074 -0300 -03 m=+486.927311601
+2025/05/10 17:23:44 level.go:20: [INFO] Transação criada com sucesso: dataHora (2020-08-07T15:34:56.789Z), valor (123.45)
+2025/05/10 17:23:44 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=CriarTransacao, Duracao=0s, Status=OK Em=2025-05-10 17:23:44.6957591 -0300 -03 m=+487.053963301
+2025/05/10 17:23:44 level.go:20: [INFO] Transação criada com sucesso: dataHora (2020-08-07T15:34:56.789Z), valor (123.45)
+2025/05/10 17:23:44 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=CriarTransacao, Duracao=0s, Status=OK Em=2025-05-10 17:23:44.8577539 -0300 -03 m=+487.215958101
+2025/05/10 17:23:45 level.go:20: [INFO] Transação criada com sucesso: dataHora (2020-08-07T15:34:56.789Z), valor (123.45)
+2025/05/10 17:23:45 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=CriarTransacao, Duracao=0s, Status=OK Em=2025-05-10 17:23:45.1350526 -0300 -03 m=+487.493256801
+2025/05/10 17:23:45 level.go:20: [INFO] Transação criada com sucesso: dataHora (2020-08-07T15:34:56.789Z), valor (123.45)
+2025/05/10 17:23:45 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=CriarTransacao, Duracao=0s, Status=OK Em=2025-05-10 17:23:45.3990083 -0300 -03 m=+487.757212501
+2025/05/10 17:23:45 level.go:20: [INFO] Transação criada com sucesso: dataHora (2020-08-07T15:34:56.789Z), valor (123.45)
+2025/05/10 17:23:45 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=CriarTransacao, Duracao=22.6181ms, Status=OK Em=2025-05-10 17:23:45.7698211 -0300 -03 m=+488.128025301
+2025/05/10 17:23:46 level.go:20: [INFO] Transação criada com sucesso: dataHora (2020-08-07T15:34:56.789Z), valor (123.45)
+2025/05/10 17:23:46 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=CriarTransacao, Duracao=0s, Status=OK Em=2025-05-10 17:23:46.0245209 -0300 -03 m=+488.382725101
+2025/05/10 17:27:55 level.go:20: [INFO] Janela de tempo determinada: Início=2025-05-10T17:26:55.573062-03:00, Fim (Agora)=2025-05-10T17:27:55.573062-03:00, Offset Nanos=-60000000000, Offset Duração=-1m0s
+2025/05/10 17:27:55 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=GetEstatistica, Duracao=3.1445ms, Status=OK Em=2025-05-10 17:27:55.5762065 -0300 -03 m=+737.934410701
+2025/05/10 17:28:05 level.go:20: [INFO] Janela de tempo determinada: Início=2107-09-14T04:28:11.188457772-03:00, Fim (Agora)=2025-05-10T17:28:05.6484995-03:00, Offset Nanos=2598519605539958272, Offset Duração=721811h0m5.539958272s
+2025/05/10 17:28:05 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=GetEstatistica, Duracao=0s, Status=OK Em=2025-05-10 17:28:05.6484995 -0300 -03 m=+748.006703701
+2025/05/10 17:28:30 level.go:20: [INFO] Janela de tempo determinada: Início=1949-02-28T16:04:24.057985032-03:00, Fim (Agora)=2025-05-10T17:28:30.306261-03:00, Offset Nanos=-2404517046248275968, Offset Duração=-667921h24m6.248275968s
+2025/05/10 17:28:30 level.go:20: [INFO] Log Interceptor: Client=127.0.0.1  Servico=itauchallenge.TransacaoService, Metodo=GetEstatistica, Duracao=6.7473ms, Status=OK Em=2025-05-10 17:28:30.3130083 -0300 -03 m=+772.671212501
+2025/05/10 18:25:55 level.go:25: [WARN] Sinal recebido: interrupt. Encerrando...
+2025/05/10 18:25:55 level.go:25: [WARN] Servidor finalizado com sucesso.
+2025/05/10 18:25:55 write.go:17: [INFO] --- Logging finalizado no arquivo ---
